@@ -107,7 +107,25 @@ class Main:
 
     def make_config(self, config_file, model_name_or_path, quiet=False):
         self.config = get_current_config()
+            # Create the argument parser
+        parser = argparse.ArgumentParser(description="Process some integers.")
+        
+        # Add the config file path argument
+        parser.add_argument('--config-file', type=str, required=True, help='Path to the configuration file')
+        
+        # Add other possible command-line arguments
+        parser.add_argument('--attacker_attack_idx', type=int, help='Attack index')
+        parser.add_argument('--logger_name', type=str, help='Logger name')
+        args = parser.parse_args()
+    
         self.config = self.config.collect_config_file(config_file)
+
+        # Override config with command-line arguments if provided
+        if True:
+            self.config.content[('attacker', 'attack_idx')] = args.attacker_attack_idx
+        if True:
+            self.config.content[('logger', 'name')] = args.logger_name
+        self.config.summary()
         self.config = self.config.collect({"task.model_name_or_path": model_name_or_path})
 
         self.config.validate()
@@ -149,6 +167,8 @@ class Main:
 
 
 if __name__ == '__main__':
-    config_file = None
+    # config_file = 'configs/nudity/no_attack_esd_nudity_classifier.json'       
+    config_file = '/home/shimon/research/Diffusion-MU-Attack/configs/nudity/text_grad_esd_nudity_classifier.json'
     model_name_or_path = None
+    # config_file = None
     Main(config_file, model_name_or_path)

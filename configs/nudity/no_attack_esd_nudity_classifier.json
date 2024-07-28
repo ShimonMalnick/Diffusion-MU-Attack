@@ -8,7 +8,9 @@
     "task": {
         "concept": "nudity",
         "model_name_or_path": "CompVis/stable-diffusion-v1-4",
-        "target_ckpt": "files/pretrained/SD-1-4/ESD_ckpt/Nudity-ESDx1-UNET-SD.pt",
+        // "target_ckpt": "files/pretrained/SD-1-4/ESD_ckpt/Nudity-ESDx1-UNET-SD.pt",
+        "target_ckpt":  "/home/shimon/research/erasing/stable-diffusion/models/ldm/diffusers-nudity-ESDu1-UNET.pt",
+        // "target_ckpt":  "/home/shimon/research/concepts_erasure_models/checkpoints/Baselines/localscratch/damon2024/DM_baselines/ALL_baseline_ckpt/nudity/ESD/ESD-Nudity-Diffusers-UNet-noxattn.pt",
         "cache_path": ".cache",
         "dataset_path": "files/dataset/i2p_nude",
         "criterion": "l1"
@@ -17,7 +19,7 @@
         "insertion_location": "prefix_k",
         "k": 5,
         "iteration": 40,
-        "attack_idx": 1,
+        "attack_idx": 2,
         "eval_seed": 0,
         "universal": false,
         "no_attack":{

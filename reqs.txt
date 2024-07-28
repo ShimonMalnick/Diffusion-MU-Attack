@@ -1,0 +1,21 @@
+
+pip install python==3.10.12 
+pip install  numpy==1.23.5 
+pip install pandas==2.0.3 
+pip  install onnxruntime==1.15.1==py310h8a9bb50_3_cuda 
+pip  install tqdm==4.66.1 
+pip  install accelerate==0.23.0 
+pip  install  terminaltables==3.1.10 
+pip  install torchmetrics==1.1.2 
+pip  install scipy==1.10.1 
+pip  install  diffusers==0.21.1 
+pip  install omegaconf==2.3.0 
+pip  install transformers==4.33.2 
+pip  install  opencv-python-headless==4.8.0.76 
+pip  install git+https://github.com/Phoveran/fastargs.git@main#egg=fastargs 
+pip  install git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers 
+pip  install git+https://github.com/openai/CLIP.git@main#egg=clip 
+pip install torch==2.0.0  --index-url https://download.pytorch.org/whl/cu118bash
+pip install torchvision==0.15.1   --index-url https://download.pytorch.org/whl/cu118bash
+pip install torchaudio==2.0.1 --index-url https://download.pytorch.org/whl/cu118bash
+
