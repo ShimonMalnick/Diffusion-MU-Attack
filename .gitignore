@@ -5,3 +5,6 @@ archive/
 *.png
 *.out
 *.sb
+src/concept-ablation-space/results/
+src/concept-ablation-space/models/
+src/concept-ablation-space/assets/
