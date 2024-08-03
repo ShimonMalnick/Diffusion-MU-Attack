@@ -66,7 +66,7 @@ def null_text_inversion(
     )
 
     # step_ratio = pipe.scheduler.config.num_train_timesteps // pipe.scheduler.num_inference_steps
-    text_embeddings = pipe._encode_prompt(prompt, device, 1, False, None).detach()
+    text_embeddings = pipe.encode_prompt(prompt, device, 1, False, None)[0].detach()
     # input_embeddings = torch.cat([null_text_embeddings, text_embeddings], dim=0)
     extra_step_kwargs = pipe.prepare_extra_step_kwargs(generator, eta)
     all_null_texts = []
@@ -121,7 +121,7 @@ def reconstruct(
     eta=0.0,
     device=None,
 ):
-    text_embeddings = pipe._encode_prompt(prompt, device, 1, False, None)
+    text_embeddings = pipe.encode_prompt(prompt, device, 1, False, None)[0]
     extra_step_kwargs = pipe.prepare_extra_step_kwargs(generator, eta)
     latents = latents.to(pipe.device)
     for i, (t, null_text_t) in enumerate(
@@ -154,18 +154,20 @@ def reconstruct(
 
 
 def plot_me(pp_image, recon_img, save_path):
+    if isinstance(recon_img, list) or (isinstance(recon_img, np.ndarray) and recon_img.shape[0] == 1):
+        recon_img = recon_img[0]
     plt.close("all")
     plt.subplot(1, 3, 1)
     plt.imshow(pp_image[0].permute(1, 2, 0).numpy() * 0.5 + 0.5)
     plt.title("Original")
     plt.axis("off")
     plt.subplot(1, 3, 2)
-    plt.imshow(recon_img[0])
+    plt.imshow(recon_img)
     plt.title("Reconstructed using Null Text Inversion")
     plt.axis("off")
     plt.subplot(1, 3, 3)
     plt.imshow(
-        np.abs(recon_img[0] - (pp_image[0].permute(1, 2, 0).numpy() * 0.5 + 0.5)).mean(
+        np.abs(recon_img - (pp_image[0].permute(1, 2, 0).numpy() * 0.5 + 0.5)).mean(
             axis=-1
         )
         * 255,

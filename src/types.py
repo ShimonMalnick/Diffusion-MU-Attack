@@ -1,30 +1,28 @@
 from enum import Enum
 
 class EnumBase(Enum):
-    @staticmethod
-    def get_all_types_names():
-        return [d.name for d in list(DataType)]
+    @classmethod
+    def get_all_types_names(cls):
+        return [d.name for d in list(cls)]
     
-    @staticmethod
-    def name2value(name):
-        return DataType[name.upper()]
+    @classmethod
+    def get_all_types(cls):
+        return [d for d in list(cls)]
     
-    @staticmethod
-    def get_associated_type(val):
+    @classmethod
+    def name2value(cls, name):
+        return cls[name]
+    
+    @classmethod
+    def get_associated_type(cls, val):
         if isinstance(val, int):
-            return DataType(val)
+            return cls(val)
         elif isinstance(val, str):
-            return DataType.name2value(val)
+            return cls.name2value(val)
         else:
             raise ValueError(f"Invalid type {type(val)}")
 
-class DataType(EnumBase):
-    NUDE = 1
-    OBJECT = 2
-    VANGOGH = 3
-
-
-class MethodType(EnumBase):
+class ModelType(EnumBase):
     EraseDiff = 1
     ESD = 2
     FMN = 3
