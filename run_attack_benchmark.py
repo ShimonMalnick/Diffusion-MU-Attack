@@ -4,7 +4,7 @@ import os.path as osp
 import argparse
 import torch
 import yaml
-from src.types import ModelType, AttackType
+from src.types import ModelType, AttackType, DataType
 import os
 from easydict import EasyDict
 from src.utils import load_pipeline, preprocess_image
@@ -82,14 +82,21 @@ def validate_and_get_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     # TODO: add choice for model base , from SD1-4, SD2, SD2.1
-    parser.add_argument("--model_base", type=str, default="CompVis/stable-diffusion-v1-4", help="Base SD model")
+    parser.add_argument(
+        "--model_base",
+        type=str,
+        default="CompVis/stable-diffusion-v1-4",
+        help="Base SD model",
+    )
     parser.add_argument(
         "--dataset_dir",
         type=str,
         default="files/dataset/sd_1_4/nudity",
         help="Path to the dataset base dir. path is relative to --base_dir. datasets can be generated using generate_all_datasets.py",
     )
-    parser.add_argument('--num_inference_steps', type=int, default=25, help='Number of inference steps')
+    parser.add_argument(
+        "--num_inference_steps", type=int, default=25, help="Number of inference steps"
+    )
     parser.add_argument(
         "--base_dir",
         type=str,
@@ -103,6 +110,14 @@ def validate_and_get_args():
         help="Model type",
         choices=ModelType.get_all_types(),
     )
+    parser.add_argument(
+        "--data_type",
+        type=DataType.get_associated_type,
+        default=DataType.Nudity,
+        help="Data type",
+        choices=DataType.get_all_types(),
+    )
+
     parser.add_argument(
         "--attack_type",
         type=AttackType.get_associated_type,
@@ -124,8 +139,12 @@ def validate_and_get_args():
     ), f"datasets directory {args.dataset_dir} does not exist"
 
     args = EasyDict(vars(args))
-    default_model_root = "/home/shimon/research/concepts_erasure_models/checkpoints/Baselines/localscratch/damon2024/DM_baselines/ALL_baseline_ckpt/nudity/"
+    default_model_root = "/home/shimon/research/concepts_erasure_models/checkpoints/Baselines/localscratch/damon2024/DM_baselines/ALL_baseline_ckpt"
     args.model_root = os.environ.get("MODEL_ROOT", default_model_root)
+    args.model_root = osp.join(
+        args.model_root,
+        args.data_type.name.lower(),
+    )
     # TODO: move model types path to types and configs
     method_to_model_path = {
         "EraseDiff": osp.join(
@@ -141,12 +160,19 @@ def validate_and_get_args():
         "UCE": osp.join(args.model_root, "UCE", "UCE-Nudity-Diffusers-UNet.pt"),
     }
     args.model_path = method_to_model_path[args.model_type.name]
-    args.out_dir = osp.join(args.base_dir, "files", "results", args.model_type.name, osp.basename(args.dataset_dir))
+    args.out_dir = osp.join(
+        args.base_dir,
+        "files",
+        "results",
+        args.model_type.name,
+        osp.basename(args.dataset_dir),
+    )
 
     os.makedirs(args.out_dir, exist_ok=True)
     save_args = vars(args).copy()
     save_args["model_type"] = args.model_type.name
     save_args["attack_type"] = args.attack_type.name
+    save_args["data_type"] = args.data_type.name
     args_yaml = osp.join(args.out_dir, "args.yaml")
     with open(args_yaml, "w") as f:
         yaml.dump(save_args, f)

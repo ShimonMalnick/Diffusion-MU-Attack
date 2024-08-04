@@ -33,4 +33,9 @@ class ModelType(EnumBase):
     
 class AttackType(EnumBase):
     NTI = 1
+
+class DataType(EnumBase):
+    Nudity = 1
+    Object = 2
+    VanGogh = 3
     
