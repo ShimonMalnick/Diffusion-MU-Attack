@@ -91,17 +91,11 @@ def validate_and_get_args():
     parser.add_argument(
         "--dataset_dir",
         type=str,
-        default="files/dataset/sd_1_4/nudity",
-        help="Path to the dataset base dir. path is relative to --base_dir. datasets can be generated using generate_all_datasets.py",
+        default="/home/shimon/research/Diffusion-MU-Attack/files/dataset/sd_1_4/files/dataset/sd_1_4/nudity",
+        help="Path to the dataset dir. datasets can be generated using generate_all_datasets.py",
     )
     parser.add_argument(
         "--num_inference_steps", type=int, default=25, help="Number of inference steps"
-    )
-    parser.add_argument(
-        "--base_dir",
-        type=str,
-        default="/home/shimon/research/Diffusion-MU-Attack",
-        help="Base directory",
     )
     parser.add_argument(
         "--model_type",
@@ -131,43 +125,37 @@ def validate_and_get_args():
         type=int,
         help="Number of optimization steps for NTI",
     )
+    parser.add_argument('--out_dir', type=str, default='/home/shimon/research/Diffusion-MU-Attack/files/results', help='Output directory')
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
     args = parser.parse_args()
-    args.dataset_dir = osp.join(args.base_dir, args.dataset_dir)
     assert osp.isdir(
         args.dataset_dir
     ), f"datasets directory {args.dataset_dir} does not exist"
 
     args = EasyDict(vars(args))
     default_model_root = "/home/shimon/research/concepts_erasure_models/checkpoints/Baselines/localscratch/damon2024/DM_baselines/ALL_baseline_ckpt"
-    args.model_root = os.environ.get("MODEL_ROOT", default_model_root)
+    args.model_root = os.environ.get("MODELS_ROOT", default_model_root)
     args.model_root = osp.join(
         args.model_root,
         args.data_type.name.lower(),
     )
+    # data type is part of the models name, and is inferred accroding to the datasets directory name:
+    data_name = "_".join([t.title() for t in osp.basename(args.dataset_dir).split("_")])
     # TODO: move model types path to types and configs
     method_to_model_path = {
         "EraseDiff": osp.join(
             args.model_root, "EraseDiff", "EraseDiff-Nudity-Diffusers-UNet.pt"
         ),
-        "ESD": osp.join(args.model_root, "ESD", "ESD-Nudity-Diffusers-UNet-noxattn.pt"),
-        "FMN": osp.join(args.model_root, "FMN", "FMN-Nudity-Diffusers-UNet.pt"),
-        "Salun": osp.join(args.model_root, "Salun", "Salun-Nudity-Diffusers-UNet.pt"),
+        "ESD": osp.join(args.model_root, "ESD", f"ESD-{data_name}-Diffusers-UNet-noxattn.pt"),
+        "FMN": osp.join(args.model_root, "FMN", f"FMN-{data_name}-Diffusers-UNet.pt"),
+        "Salun": osp.join(args.model_root, "Salun", f"Salun-{data_name}-Diffusers-UNet.pt"),
         "Scissorhands": osp.join(
-            args.model_root, "Scissorhands", "Scissorhands-Nudity-Diffusers-UNet.pt"
+            args.model_root, "Scissorhands", f"Scissorhands-{data_name}-Diffusers-UNet.pt"
         ),
-        "SPM": osp.join(args.model_root, "SPM", "SPM-Nudity-Diffusers-UNet.pt"),
-        "UCE": osp.join(args.model_root, "UCE", "UCE-Nudity-Diffusers-UNet.pt"),
+        "SPM": osp.join(args.model_root, "SPM", f"SPM-{data_name}-Diffusers-UNet.pt"),
+        "UCE": osp.join(args.model_root, "UCE", f"UCE-{data_name}-Diffusers-UNet.pt"),
     }
     args.model_path = method_to_model_path[args.model_type.name]
-    args.out_dir = osp.join(
-        args.base_dir,
-        "files",
-        "results",
-        args.model_type.name,
-        osp.basename(args.dataset_dir),
-    )
-
     os.makedirs(args.out_dir, exist_ok=True)
     save_args = vars(args).copy()
     save_args["model_type"] = args.model_type.name
