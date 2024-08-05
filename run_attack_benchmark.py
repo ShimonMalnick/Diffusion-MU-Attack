@@ -148,7 +148,7 @@ def validate_and_get_args():
         "EraseDiff": osp.join(
             args.model_root, "EraseDiff", f"EraseDiff-{data_name}-Diffusers-UNet.pt"
         ),
-        "ESD": osp.join(args.model_root, "ESD", f"ESD-{data_name}-Diffusers-UNet-noxattn.pt"),
+        "ESD": osp.join(args.model_root, "ESD", f"ESD-{data_name}-Diffusers-UNet-{'no' if data_name != 'VanGogh' else ''}xattn.pt"),
         "FMN": osp.join(args.model_root, "FMN", f"FMN-{data_name}-Diffusers-UNet.pt"),
         "Salun": osp.join(args.model_root, "Salun", f"Salun-{data_name}-Diffusers-UNet.pt"),
         "Scissorhands": osp.join(
