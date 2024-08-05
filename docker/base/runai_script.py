@@ -6,7 +6,7 @@ import time
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('runs', type=int, default=1, help='Number of runs')
-    parser.add_argument('start', type=int, default=0, help='Start number')
+    parser.add_argument('--start', type=int, default=0, help='Start number')
     
     args = parser.parse_args()
     
