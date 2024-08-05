@@ -57,20 +57,10 @@ def run_job(model_base, model_base_name, model_type, dir_name, data_type, dry_ru
         return False
 
 if __name__ == "__main__":
-    # all_params = list(get_next_job_params())
-    # if len(sys.argv) < 2:
-    #     for params in all_params:
-    #         run_job(*params, dry_run=False)
-    # else:
-    #     assert 0 <= int(sys.argv[1]) < len(all_params), f"Invalid index {sys.argv[1]}"
-    #     run_job(*all_params[int(sys.argv[1])], dry_run=False)
-
-    while True:
-        next_job_params_iterator = get_next_job_params()
-        try:
-            next_job_params = next(next_job_params_iterator)
-        except StopIteration:
-            break
-        out = run_job(*next_job_params)
-        if not out:
-            break
+    all_params = list(get_next_job_params())
+    if len(sys.argv) < 2:
+        for params in all_params:
+            run_job(*params, dry_run=False)
+    else:
+        assert 0 <= int(sys.argv[1]) < len(all_params), f"Invalid index {sys.argv[1]}"
+        run_job(*all_params[int(sys.argv[1])], dry_run=False)
