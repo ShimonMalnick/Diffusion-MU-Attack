@@ -141,10 +141,12 @@ def validate_and_get_args():
     )
     # data type is part of the models name, and is inferred accroding to the datasets directory name:
     data_name = "_".join([t.title() for t in osp.basename(args.dataset_dir).split("_")])
+    if data_name.lower() == 'vangogh': # for vangogh we need VanGogh although dir name is vangogh and not van_gogh
+        data_name = 'VanGogh'
     # TODO: move model types path to types and configs
     method_to_model_path = {
         "EraseDiff": osp.join(
-            args.model_root, "EraseDiff", "EraseDiff-Nudity-Diffusers-UNet.pt"
+            args.model_root, "EraseDiff", f"EraseDiff-{data_name}-Diffusers-UNet.pt"
         ),
         "ESD": osp.join(args.model_root, "ESD", f"ESD-{data_name}-Diffusers-UNet-noxattn.pt"),
         "FMN": osp.join(args.model_root, "FMN", f"FMN-{data_name}-Diffusers-UNet.pt"),
