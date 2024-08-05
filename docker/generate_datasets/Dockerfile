@@ -17,6 +17,7 @@ RUN echo "alias ll='ls -l --color=auto'" >> /root/.bashrc
 
 COPY ./src /code/Diffusion-MU-Attack/src
 COPY ./run_attack_benchmark.py /code/Diffusion-MU-Attack/run_attack_benchmark.py
+COPY ./generate_datasets.py /code/Diffusion-MU-Attack/generate_datasets.py
 COPY ./run_attack_all_datasets.py /code/Diffusion-MU-Attack/run_attack_all_datasets.py
 COPY ./configs /code/Diffusion-MU-Attack/configs
 COPY ./scripts /code/Diffusion-MU-Attack/scripts
