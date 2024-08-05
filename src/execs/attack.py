@@ -153,12 +153,10 @@ class Main:
         parser = argparse.ArgumentParser(description="Process some integers.")
         parser.add_argument('--attacker_attack_idx', type=int, help='Attack index', dest='attacker.attack_idx')
         parser.add_argument('--logger_name', type=str, help='Logger name', dest='logger.name')
-        # notice that --config-file is already populated by fastargs when calling augmeen_argparse
+        # notice that --config-file is already populated by fastargs when calling augment_argparse
         self.config.augment_argparse(parser)
         self.config.collect_argparse_args(parser)
         self.config.collect_env_variables()
-
-        self.config.summary()
 
         self.config.validate()
         if not quiet:

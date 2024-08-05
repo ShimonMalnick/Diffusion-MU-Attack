@@ -11,7 +11,10 @@ class EnumBase(Enum):
     
     @classmethod
     def name2value(cls, name):
-        return cls[name]
+        for d in list(cls):
+            if d.name.lower() == name.lower():
+                return d
+        raise ValueError(f"Invalid name {name}")
     
     @classmethod
     def get_associated_type(cls, val):
